@@ -4,3 +4,8 @@
 *.log
 project
 target
+modules/js/target
+modules/jvm/target
+modules/shared/target
+project
+target

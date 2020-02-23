@@ -25,12 +25,13 @@ object Templates {
     val list = List(TracksPage, TagsPage)
   }
 
-
-  def layout(page: Page, additionalJs: List[String] = List.empty)(bodyPart: scalatags.Text.Modifier*) = html(lang := "en")(
+  def layout(page: Page)(bodyPart: scalatags.Text.Modifier*) = html(lang := "en")(
     head(
       meta(charset := "utf-8"),
       meta(name := "viewport", content := "width=device-width, initial-scale=1, shrink-to-fit=no"),
-      link(rel := "stylesheet", href := "assets/bootstrap/4.4.1/css/bootstrap.min.css"),
+//      link(rel := "stylesheet", href := "assets/bootstrap/4.4.1/css/bootstrap.min.css"),
+//      <link rel="stylesheet" href="target/scala-2.12/scalajs-bundler/main/node_modules/bootstrap/dist/css/bootstrap.min.css">
+      link(rel := "stylesheet", href := "https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"),
       title("Зайцев.нет Антимат"),
       link(rel := "stylesheet", href := "assets/main.css")
     ),
@@ -73,16 +74,12 @@ object Templates {
         )
       ),
 
-      script(src := "assets/jquery/3.4.1/jquery.min.js"),
-      script(src := "assets/popper.js/1.14.3/umd/popper.min.js"),
-      script(src := "assets/bootstrap/4.4.1/js/bootstrap.min.js"),
-      for (scriptPath <- additionalJs) yield {
-        script(src := scriptPath)
-      }
+      script(src := "assets/tags-jsdeps.js"),
+      script(src := "assets/tags.js"),
     )
   )
 
-  val tagsPage = layout(TagsPage, List("assets/tags.js"))(
+  val tagsPage = layout(TagsPage)(
     div(`class` := "block-container")(
       //    New tag input
       div(`class` := "add-items d-flex")(
@@ -116,7 +113,7 @@ object Templates {
     )
   )
 
-  val tracksPage = layout(TracksPage, List("assets/tracks.js"))(
+  val tracksPage = layout(TracksPage)(
     //    Track search
     form(`class` := "form-inline")(
       div(`class` := "form-group mx-sm-3 mb-2")(

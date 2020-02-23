@@ -33,8 +33,8 @@ class Server(tagService: TagServiceLike)(implicit sys: ActorSystem, ec: Executio
   implicit val jsonStreamingSupport: JsonEntityStreamingSupport = EntityStreamingSupport.json()
 
   // Use the request's URI as the cache's key
-  val cacheKeyerFunction: PartialFunction[RequestContext, Uri] = {
-    case r: RequestContext => r.request.uri
+  val cacheKeyerFunction: PartialFunction[RequestContext, Uri.Path] = {
+    case r: RequestContext => r.request.uri.path
   }
   private[this] val defaultCachingSettings = CachingSettings(sys)
   private[this] val lfuCacheSettings =
@@ -45,7 +45,7 @@ class Server(tagService: TagServiceLike)(implicit sys: ActorSystem, ec: Executio
       .withTimeToIdle(30.seconds)
   private[this] val cachingSettings =
     defaultCachingSettings.withLfuCacheSettings(lfuCacheSettings)
-  private[this] val lfuCache: Cache[Uri, RouteResult] = LfuCache(cachingSettings)
+  private[this] val lfuCache: Cache[Uri.Path, RouteResult] = LfuCache(cachingSettings)
 
   object IdsSegment extends PathMatcher1[Set[Long]] {
     def apply(path: Path) =
@@ -80,7 +80,8 @@ class Server(tagService: TagServiceLike)(implicit sys: ActorSystem, ec: Executio
         logger.debug(s"Fetching asset: $assetPath")
         completeOrElse(
           getFromResource(LOCAL_PREFIX_PATH + assetPath),
-          getFromResource(WEBJAR_PREFIX_PATH + assetPath)
+//          getFromResource(WEBJAR_PREFIX_PATH + assetPath)
+          getFromResourceDirectory("")
         )
       }
     }

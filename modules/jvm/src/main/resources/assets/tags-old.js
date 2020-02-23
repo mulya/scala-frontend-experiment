@@ -25,7 +25,7 @@ function ajaxTagsFetch(){
 }
 
 $(document).on("keypress", "#tagName", function (e) {
-  if (e.keyCode == 13){
+  if (e.keyCode === 13){
       e.preventDefault();
       var tagName = $(this).val();
       ajaxCreateTag(tagName);
@@ -47,18 +47,18 @@ function ajaxCreateTag(tagName){
 }
 
 $('#tagConfirmationModal').on('show.bs.modal', function (event) {
-  var button = $(event.relatedTarget); // Button that triggered the modal
-  var modal = $(this);
-  var id = button.data("id");
-  var name = button.data("name");
-  var deleteButton = $("#tag-delete-button");
+    const button = $(event.relatedTarget); // Button that triggered the modal
+    const modal = $(this);
+    const id = button.data("id");
+    const name = button.data("name");
+    const deleteButton = $("#tag-delete-button");
 
   modal.find('.modal-body p').text("Удаление тега \"" + name + "\" так же удалит все связи с треками");
   deleteButton.attr("data-id", id);
 });
 
 $("#tag-delete-button").on('click', function(event) {
-    var button = $(this);
+    const button = $(this);
     ajaxDeleteTag(button.attr("data-id"));
 });
 

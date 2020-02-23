@@ -87,8 +87,7 @@ class TagService()(implicit ec: ExecutionContext, ss: SlickSession, mat: Materia
       .map{ tupleList =>
         tupleList
           .groupBy(_._1)
-          .view.mapValues(v => v.map(_._2))
-          .toMap
+          .mapValues(v => v.map(_._2))
       }
   }
 
