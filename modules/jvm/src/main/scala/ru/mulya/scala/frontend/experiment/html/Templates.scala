@@ -32,7 +32,7 @@ object Templates {
 //      link(rel := "stylesheet", href := "assets/bootstrap/4.4.1/css/bootstrap.min.css"),
 //      <link rel="stylesheet" href="target/scala-2.12/scalajs-bundler/main/node_modules/bootstrap/dist/css/bootstrap.min.css">
       link(rel := "stylesheet", href := "https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"),
-      title("Зайцев.нет Антимат"),
+      title("Scala Frontend Exp"),
       link(rel := "stylesheet", href := "assets/main.css")
     ),
     body(`class` := "d-flex flex-column h-100")(

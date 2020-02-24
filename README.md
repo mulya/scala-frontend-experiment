@@ -10,6 +10,11 @@ Service for adding tags to tracks. Track list fetched from external service. Tag
 
 ## Tech info ##
 
+### Run ###
+```sh
+sbt modulesJVM/run
+```
+
 ### DB migrations ###
 Located in "/resources/db.migrations" dir. Applied on every start of application.
 
