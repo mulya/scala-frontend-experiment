@@ -8,7 +8,6 @@ import scalatags.Text.all._
 
 import scala.scalajs.js
 import scala.scalajs.js.Dynamic
-import scala.util.Try
 
 object Tracks {
 
@@ -25,7 +24,7 @@ object Tracks {
   }
 
   $(document).on("keypress", "#query", js.undefined, (e: Element, ev: JQueryEventObject) => {
-    if (ev.which == KeyCode.Enter){
+    if (ev.which == KeyCode.Enter) {
       ev.preventDefault()
       val query = $(e).valueString
       ajaxTrackSearch(query)
@@ -53,7 +52,7 @@ object Tracks {
           ajaxTagSearch(data.tracks.asInstanceOf[js.Array[js.Dynamic]], data.page.toString.toInt, data.pagesCount.toString.toInt)
         },
         error = (jqXHR: JQueryXHR, textStatus: String, errorThrow: String) => {
-          if(jqXHR.status == 404) {
+          if (jqXHR.status == 404) {
             $(".table-spinner-container").hide()
           }
         }
@@ -61,12 +60,12 @@ object Tracks {
     }
   }
 
-  def ajaxTagSearch(tracksData: js.Array[js.Dynamic], page: Int, pagesCount: Int){
+  def ajaxTagSearch(tracksData: js.Array[js.Dynamic], page: Int, pagesCount: Int) {
     val idListStr = tracksData.map(_.id.toString).mkString(";")
 
     $.ajax(Dynamic.literal(
-      url =  "/api/v1/tracks/" + idListStr + "/tags",
-      method =  "GET",
+      url = "/api/v1/tracks/" + idListStr + "/tags",
+      method = "GET",
       cache = false,
       success = (data: js.Dynamic, status: String, jqXHR: JQueryXHR) => {
         fillTableWithData(tracksData, data)
@@ -119,7 +118,7 @@ object Tracks {
   })
 
   def fillTableWithData(tracksData: js.Array[js.Dynamic], tagsData: js.Dynamic) {
-    tracksData.foreach{ track =>
+    tracksData.foreach { track =>
       var tagListStr = ""
 
       if (!js.isUndefined(tagsData.selectDynamic(track.id.toString))) {
@@ -145,7 +144,7 @@ object Tracks {
     $(".table-spinner-container").hide()
   }
 
-  $("#trackModal").on("show.bs.modal", (e:Element, ev:JQueryEventObject) => {
+  $("#trackModal").on("show.bs.modal", (e: Element, ev: JQueryEventObject) => {
     val button = $(ev.relatedTarget) // Button that triggered the modal
     val modal = $(e)
     val id = button.data("id").toString.toInt
@@ -163,12 +162,12 @@ object Tracks {
     containerDiv.find("div").remove()
 
     $.when($.ajax("/api/v1/tags"), $.ajax("/api/v1/tracks/" + id + "/tags")).done((allTagsData: js.Array[js.Dynamic], tracksTagsData: js.Array[js.Dynamic]) => {
-      allTagsData.head.asInstanceOf[js.Array[js.Dynamic]].foreach{ tag =>
+      allTagsData.head.asInstanceOf[js.Array[js.Dynamic]].foreach { tag =>
         var checked = false
         val tracksTagsMap = tracksTagsData.head
         if (!js.isUndefined(tracksTagsMap.selectDynamic(id.toString))) {
           val tracksTags = tracksTagsMap.selectDynamic(id.toString).asInstanceOf[js.Array[js.Dynamic]]
-          tracksTags.foreach{ tracksTag =>
+          tracksTags.foreach { tracksTag =>
             if (tracksTag.selectDynamic("id").toString == tag.selectDynamic("id").toString) {
               checked = true
             }
@@ -195,7 +194,7 @@ object Tracks {
     })
   })
 
-  $("#modal-save-button").on("click", (e:Element, ev:JQueryEventObject) => {
+  $("#modal-save-button").on("click", (e: Element, ev: JQueryEventObject) => {
     import js.JSConverters._
     ev.preventDefault()
 
@@ -213,14 +212,5 @@ object Tracks {
       }
     ).asInstanceOf[JQueryAjaxSettings])
   })
-
-  // Monkey patching JQuery
-  @js.native
-  trait SemanticJQuery extends JQuery {
-    def modal(params: js.Any*): SemanticJQuery = js.native
-  }
-
-  // Monkey patching JQuery with implicit conversion
-  implicit def jq2semantic(jq: JQuery): SemanticJQuery = jq.asInstanceOf[SemanticJQuery]
 
 }
